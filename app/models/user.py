@@ -5,7 +5,7 @@ from app.extensions import db
 
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
 
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='用户编号')
     username = db.Column(db.String(50), unique=True, nullable=False, comment='用户名')

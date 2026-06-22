@@ -9,7 +9,7 @@ class Favorite(db.Model):
     )
 
     favorite_id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='收藏编号')
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False, comment='用户编号')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False, comment='用户编号')
     product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), nullable=False, comment='商品编号')
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 

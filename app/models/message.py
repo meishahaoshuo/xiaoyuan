@@ -10,8 +10,8 @@ class Message(db.Model):
     )
 
     message_id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='消息编号')
-    sender_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False, comment='发送者编号')
-    receiver_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False, comment='接收者编号')
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False, comment='发送者编号')
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False, comment='接收者编号')
     product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'), nullable=True, comment='关联商品编号')
     message_content = db.Column(db.Text, nullable=False, comment='消息内容')
     read_status = db.Column(db.Boolean, nullable=False, default=False, comment='阅读状态')

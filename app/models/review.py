@@ -13,8 +13,8 @@ class Review(db.Model):
 
     review_id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='评价编号')
     order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id'), nullable=False, comment='订单编号')
-    reviewer_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False, comment='评价人编号')
-    reviewed_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False, comment='被评价人编号')
+    reviewer_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False, comment='评价人编号')
+    reviewed_user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False, comment='被评价人编号')
     score = db.Column(db.SmallInteger, nullable=False, comment='评分')
     review_content = db.Column(db.String(1000), nullable=True, comment='评价内容')
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

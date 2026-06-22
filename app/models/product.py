@@ -11,7 +11,7 @@ class Product(db.Model):
     )
 
     product_id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='商品编号')
-    seller_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False, comment='卖家编号')
+    seller_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False, comment='卖家编号')
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id'), nullable=False, comment='分类编号')
     product_name = db.Column(db.String(150), nullable=False, comment='商品名称')
     price = db.Column(db.Numeric(10, 2), nullable=False, comment='商品价格')

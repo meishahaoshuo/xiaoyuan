@@ -6,7 +6,7 @@ class Notification(db.Model):
     __tablename__ = 'notification'
 
     notification_id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='通知编号')
-    receiver_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False, comment='接收者编号')
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False, comment='接收者编号')
     notification_type = db.Column(db.String(30), nullable=False, comment='通知类型')
     title = db.Column(db.String(200), nullable=False, comment='通知标题')
     content = db.Column(db.Text, nullable=False, comment='通知内容')
