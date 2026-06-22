@@ -3,8 +3,11 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card shadow-sm">
-            <div class="card-header"><h5 class="mb-0">发布二手商品</h5></div>
+        <div class="card shadow-sm publish-form-shell">
+            <div class="card-header">
+                <h5 class="mb-1">发布二手商品</h5>
+                <p class="text-muted small mb-0">补充清晰的信息和图片，可以提升商品曝光和成交效率。</p>
+            </div>
             <div class="card-body">
                 <form method="post" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
@@ -41,14 +44,17 @@
                         {{ form.description.label(class="form-label") }}
                         {{ form.description(class="form-control", rows="4", placeholder="请详细描述商品状况（10~1000字）", maxlength=1000) }}
                         {% for err in form.description.errors %}<small class="text-danger">{{ err }}</small>{% endfor %}
-                        <small class="text-muted">已输入 <span id="descCount">0</span>/1000 字符</small>
+                        <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap mt-2">
+                            <small class="text-muted">建议说明购买时间、使用频率、瑕疵情况和交易方式</small>
+                            <small class="text-muted">已输入 <span id="descCount">0</span>/1000 字符</small>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">商品图片 (1~6张, JPG/PNG/WebP, 每张&lt;5MB)</label>
                         <input type="file" name="images" class="form-control" multiple accept="image/jpeg,image/png,image/webp">
                         <small class="text-muted">第一张图片将作为封面</small>
                     </div>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 publish-action-row">
                         {{ form.submit_publish(class="btn btn-primary") }}
                         {{ form.submit_draft(class="btn btn-outline-secondary") }}
                     </div>

@@ -1,37 +1,97 @@
 {% extends "base.html" %}
 {% block title %}登录 - 校园二手交易{% endblock %}
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-5 col-lg-4">
-        <div class="card border-0 shadow-lg">
-            <div class="card-body p-4 p-lg-5">
-                <div class="text-center mb-4">
-                    <span style="font-size:2.5rem">♻</span>
-                    <h4 class="fw-bold mt-2">欢迎回来</h4>
-                    <p class="text-muted small">登录你的校园二手账号</p>
+<section class="auth-shell">
+    <div class="auth-card">
+        <div class="auth-panel auth-panel-brand">
+            <span class="auth-badge">校园闲置更高效</span>
+            <div class="auth-brand-mark">
+                <span class="auth-brand-icon">♻</span>
+                <div>
+                    <p class="auth-brand-name mb-1">校园二手交易</p>
+                    <p class="auth-brand-subtitle mb-0">让闲置流转更快，让交易更安心。</p>
                 </div>
-                <form method="post">
-                    {{ form.hidden_tag() }}
-                    <div class="mb-3">
-                        <label class="form-label">用户名</label>
-                        {{ form.username(class="form-control form-control-lg", placeholder="请输入用户名") }}
-                        {% for err in form.username.errors %}<small class="text-danger">{{ err }}</small>{% endfor %}
+            </div>
+            <div class="auth-copy">
+                <h2>欢迎回来</h2>
+                <p>登录后即可查看收藏、管理商品、跟进订单和消息通知，继续你的校园闲置交易。</p>
+            </div>
+            <div class="auth-benefit-list">
+                <div class="auth-benefit-item">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    <div>
+                        <strong>快速发布</strong>
+                        <span>几步即可上传商品信息和图片。</span>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">密码</label>
-                        {{ form.password(class="form-control form-control-lg", placeholder="请输入密码") }}
-                        {% for err in form.password.errors %}<small class="text-danger">{{ err }}</small>{% endfor %}
+                </div>
+                <div class="auth-benefit-item">
+                    <i class="bi bi-shield-check"></i>
+                    <div>
+                        <strong>交易更安心</strong>
+                        <span>支持订单流程、消息沟通和评价反馈。</span>
                     </div>
-                    <div class="d-grid mb-3">
-                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                </div>
+                <div class="auth-benefit-item">
+                    <i class="bi bi-chat-dots-fill"></i>
+                    <div>
+                        <strong>消息不漏看</strong>
+                        <span>收藏、订单和站内通知都能集中查看。</span>
                     </div>
-                </form>
-                <div class="text-center">
-                    <a href="{{ url_for('auth.register') }}" class="fw-medium">还没有账号？立即注册</a><br>
-                    <a href="{{ url_for('auth.forgot_password') }}" class="text-muted small">忘记密码？</a>
                 </div>
             </div>
         </div>
+
+        <div class="auth-panel auth-form-panel">
+            <div class="auth-form-header">
+                <span class="auth-eyebrow">账号登录</span>
+                <h3>登录你的校园账号</h3>
+                <p>输入用户名和密码，继续浏览、沟通和交易。</p>
+            </div>
+
+            <form method="post" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="mb-3">
+                    <label class="form-label">用户名</label>
+                    <div class="auth-input-wrap">
+                        <i class="bi bi-person"></i>
+                        {{ form.username(class="form-control form-control-lg", placeholder="请输入用户名") }}
+                    </div>
+                    {% for err in form.username.errors %}
+                    <div class="auth-field-error">{{ err }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-2">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <label class="form-label mb-0">密码</label>
+                        <a href="{{ url_for('auth.forgot_password') }}" class="auth-inline-link">忘记密码？</a>
+                    </div>
+                    <div class="auth-input-wrap">
+                        <i class="bi bi-lock"></i>
+                        {{ form.password(class="form-control form-control-lg", placeholder="请输入密码") }}
+                    </div>
+                    {% for err in form.password.errors %}
+                    <div class="auth-field-error">{{ err }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="auth-meta">
+                    <span><i class="bi bi-shield-lock"></i> 连续输错 5 次将临时锁定账号</span>
+                </div>
+
+                <div class="d-grid mt-4">
+                    {{ form.submit(class="btn btn-primary btn-lg auth-submit") }}
+                </div>
+            </form>
+
+            <div class="auth-divider"><span>新用户入口</span></div>
+
+            <div class="auth-footer">
+                <p class="mb-2">还没有账号？现在就完成注册，开始发布和购买闲置物品。</p>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary w-100">立即注册</a>
+            </div>
+        </div>
     </div>
-</div>
+</section>
 {% endblock %}

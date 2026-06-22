@@ -2,12 +2,15 @@
 {% from "partials/_product_card.html" import product_card %}
 {% block title %}搜索{% if query %}{{ query }}{% endif %}{% endblock %}
 {% block content %}
-<div class="row">
+<div class="row g-3 g-lg-4 search-layout">
     <!-- Filter Sidebar -->
     <div class="col-md-3">
-        <div class="card shadow-sm mb-3">
+        <div class="card shadow-sm mb-3 search-filter-card">
             <div class="card-body">
-                <h6>筛选条件</h6>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="mb-0">筛选条件</h6>
+                    <span class="badge text-bg-light">搜索</span>
+                </div>
                 <form action="{{ url_for('browse.search') }}" method="get">
                     <input type="hidden" name="q" value="{{ query or '' }}">
                     <div class="mb-2">
@@ -42,9 +45,15 @@
     </div>
     <!-- Results -->
     <div class="col-md-9">
-        <h5 class="mb-3">{% if query %}搜索 "{{ query }}"{% else %}商品列表{% endif %}</h5>
+        <div class="search-results-head">
+            <div>
+                <h5 class="mb-1">{% if query %}搜索 "{{ query }}"{% else %}商品列表{% endif %}</h5>
+                {% if pagination.items %}
+                <p class="text-muted small mb-0">共 {{ pagination.total }} 个结果</p>
+                {% endif %}
+            </div>
+        </div>
         {% if pagination.items %}
-        <p class="text-muted small">共 {{ pagination.total }} 个结果</p>
         <div class="row row-cols-2 row-cols-md-3 g-3">
             {% for p in pagination.items %}
             {{ product_card(p) }}

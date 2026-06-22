@@ -3,17 +3,19 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm chat-card-shell">
             <div class="card-header d-flex align-items-center">
                 <a href="{{ url_for('social.chat_list') }}" class="btn btn-sm btn-outline-secondary me-2"><i class="bi bi-arrow-left"></i></a>
-                <strong>{{ other_user.username }}</strong>
-                <span class="text-muted ms-2 small">| {{ product.product_name }}</span>
+                <div class="chat-header-meta">
+                    <strong>{{ other_user.username }}</strong>
+                    <span class="text-muted small">{{ product.product_name }}</span>
+                </div>
             </div>
-            <div class="card-body" style="height:400px;overflow-y:auto" id="chatMessages">
+            <div class="card-body chat-messages-pane" id="chatMessages">
                 {% if messages %}
                 {% for msg in messages %}
                 <div class="d-flex mb-3 {{ 'justify-content-end' if msg.sender_id == current_user.user_id else '' }}">
-                    <div class="rounded px-3 py-2 {{ 'bg-primary text-white' if msg.sender_id == current_user.user_id else 'bg-light' }}" style="max-width:70%">
+                    <div class="rounded px-3 py-2 chat-bubble {{ 'bg-primary text-white' if msg.sender_id == current_user.user_id else 'bg-light' }}">
                         <p class="mb-0">{{ msg.message_content }}</p>
                         <small class="{{ 'text-white-50' if msg.sender_id == current_user.user_id else 'text-muted' }}">{{ msg.created_at.strftime('%H:%M') }}</small>
                     </div>
@@ -24,7 +26,7 @@
                 {% endif %}
             </div>
             <div class="card-footer">
-                <form method="post" class="d-flex gap-2">
+                <form method="post" class="d-flex gap-2 chat-form-row">
                     {{ form.hidden_tag() }}
                     {{ form.content(class="form-control", rows="2", placeholder="输入消息...", maxlength=2000) }}
                     {{ form.submit(class="btn btn-primary") }}
