@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.db
+.env
+uploads/products/*
+uploads/avatars/*
+!uploads/products/.gitkeep
+!uploads/avatars/.gitkeep

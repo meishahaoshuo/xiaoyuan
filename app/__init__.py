@@ -13,6 +13,20 @@ def create_app(config_name='default'):
     login_manager.init_app(app)
     migrate.init_app(app, db)
 
+    # Health check (no DB needed)
+    @app.route('/ping')
+    def ping():
+        return 'pong'
+
+    @app.route('/db-test')
+    def db_test():
+        try:
+            from app.models.category import Category
+            count = Category.query.count()
+            return f'DB OK: {count} categories'
+        except Exception as e:
+            return f'DB Error: {str(e)}'
+
     # Register blueprints
     from app.blueprints.auth import auth_bp
     from app.blueprints.user import user_bp
@@ -62,19 +76,21 @@ def create_app(config_name='default'):
     @app.context_processor
     def inject_globals():
         from flask_login import current_user
-        from app.models.category import Category
-        ctx = {
-            'current_user': current_user,
-            'get_categories': lambda: Category.enabled().order_by(Category.category_name).all(),
-        }
+        ctx = {'current_user': current_user}
+        try:
+            from app.models.category import Category
+            ctx['get_categories'] = lambda: Category.enabled().order_by(Category.category_name).all()
+        except Exception:
+            ctx['get_categories'] = lambda: []
         if current_user.is_authenticated:
-            from app.models.notification import Notification
-            unread = Notification.query.filter_by(
-                receiver_id=current_user.user_id,
-                read_status=0,
-                deleted=0
-            ).count()
-            ctx['unread_notification_count'] = unread
+            try:
+                from app.models.notification import Notification
+                unread = Notification.query.filter_by(
+                    receiver_id=current_user.user_id, read_status=0, deleted=0
+                ).count()
+                ctx['unread_notification_count'] = unread
+            except Exception:
+                ctx['unread_notification_count'] = 0
         else:
             ctx['unread_notification_count'] = 0
         return ctx
