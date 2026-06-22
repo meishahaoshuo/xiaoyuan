@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}消息{% endblock %}
+{% block content %}
+<h4 class="mb-3"><i class="bi bi-chat-dots"></i> 消息</h4>
+{% if conversations %}
+<div class="list-group">
+    {% for conv in conversations %}
+    <a href="{{ url_for('social.chat_detail', user_id=conv.other_user.user_id, product_id=conv.product.product_id) }}" class="list-group-item list-group-item-action">
+        <div class="d-flex align-items-center">
+            {% if conv.other_user.avatar %}
+            <img src="{{ url_for('static', filename=conv.other_user.avatar) }}" class="rounded-circle me-3" width="48" height="48" style="object-fit:cover">
+            {% else %}
+            <i class="bi bi-person-circle text-muted me-3" style="font-size:48px"></i>
+            {% endif %}
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between">
+                    <strong>{{ conv.other_user.username }}</strong>
+                    <small class="text-muted">{{ conv.last_time.strftime('%m-%d %H:%M') if conv.last_time else '' }}</small>
+                </div>
+                <small class="text-muted">关于：{{ conv.product.product_name }}</small>
+                {% if conv.last_message %}
+                <p class="mb-0 small text-truncate">{{ conv.last_message.message_content[:50] }}</p>
+                {% endif %}
+            </div>
+            {% if conv.unread_count > 0 %}
+            <span class="badge bg-danger ms-2">{{ conv.unread_count }}</span>
+            {% endif %}
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+    <i class="bi bi-chat-dots" style="font-size:3rem"></i>
+    <p class="mt-2">暂无消息</p>
+</div>
+{% endif %}
+{% endblock %}

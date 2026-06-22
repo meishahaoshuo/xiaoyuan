@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}数据统计{% endblock %}
+{% block content %}
+<h4 class="mb-3">数据统计</h4>
+<form class="row g-2 mb-3" method="get">
+    <div class="col-md-3">
+        <label class="form-label small">开始日期</label>
+        <input type="date" name="start" class="form-control" value="{{ start_date }}">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label small">结束日期</label>
+        <input type="date" name="end" class="form-control" value="{{ end_date }}">
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">查询</button>
+    </div>
+</form>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="card text-bg-primary"><div class="card-body text-center"><h4>{{ stats.total_users }}</h4><small>用户总数</small></div></div></div>
+    <div class="col-6 col-md-3"><div class="card text-bg-success"><div class="card-body text-center"><h4>{{ stats.on_sale_products }}</h4><small>在售商品</small></div></div></div>
+    <div class="col-6 col-md-3"><div class="card text-bg-warning"><div class="card-body text-center"><h4>{{ stats.total_orders }}</h4><small>总订单</small></div></div></div>
+    <div class="col-6 col-md-3"><div class="card text-bg-info"><div class="card-body text-center"><h4>{{ stats.completion_rate }}%</h4><small>完成率</small></div></div></div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header"><h6 class="mb-0">分类分布</h6></div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    {% for item in cat_dist %}
+                    <tr><td>{{ item.name }}</td><td><span class="badge bg-primary">{{ item.count }}</span></td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header"><h6 class="mb-0">订单统计（{{ start_date }} ~ {{ end_date }}）</h6></div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <tr><td>总订单数</td><td><strong>{{ stats.total_orders }}</strong></td></tr>
+                    <tr><td>已完成</td><td><strong>{{ stats.completed_orders }}</strong></td></tr>
+                    <tr><td>完成率</td><td><strong>{{ stats.completion_rate }}%</strong></td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

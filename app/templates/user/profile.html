@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}个人资料{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                {% if user.avatar %}
+                <img src="{{ url_for('static', filename=user.avatar) }}" class="rounded-circle mb-3" width="120" height="120" style="object-fit:cover">
+                {% else %}
+                <i class="bi bi-person-circle text-muted" style="font-size:120px"></i>
+                {% endif %}
+                <h4>{{ user.username }}</h4>
+                <span class="badge bg-{{ 'success' if user.status == 'ACTIVE' else 'danger' }}">{{ '正常' if user.status == 'ACTIVE' else '已禁用' }}</span>
+                <span class="badge bg-info">{{ '管理员' if user.role == 'ADMIN' else '普通用户' }}</span>
+                <p class="text-muted mt-2">{{ user.introduction or '暂无简介' }}</p>
+                <a href="{{ url_for('user.edit_profile') }}" class="btn btn-outline-primary btn-sm">编辑资料</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header"><h5 class="mb-0">个人信息</h5></div>
+            <div class="card-body">
+                <table class="table">
+                    <tr><th width="120">用户名</th><td>{{ user.username }}</td></tr>
+                    <tr><th>手机号</th><td>{{ user.phone or '未设置' }}</td></tr>
+                    <tr><th>注册时间</th><td>{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="card shadow-sm mt-3">
+            <div class="card-header"><h5 class="mb-0">数据统计</h5></div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-3">
+                        <h3 class="text-primary">{{ stats.product_count }}</h3>
+                        <small class="text-muted">发布的商品</small>
+                    </div>
+                    <div class="col-3">
+                        <h3 class="text-success">{{ stats.sold_count }}</h3>
+                        <small class="text-muted">已售出</small>
+                    </div>
+                    <div class="col-3">
+                        <h3 class="text-warning">{{ stats.avg_rating or '-' }}</h3>
+                        <small class="text-muted">平均评分</small>
+                    </div>
+                    <div class="col-3">
+                        <h3 class="text-info">{{ stats.review_count }}</h3>
+                        <small class="text-muted">收到的评价</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

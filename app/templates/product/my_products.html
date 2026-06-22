@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}我的商品{% endblock %}
+{% block content %}
+<h4 class="mb-3">我的商品</h4>
+<!-- Filter tabs -->
+<ul class="nav nav-pills mb-3">
+    <li class="nav-item"><a class="nav-link {{ 'active' if not current_filter }}" href="{{ url_for('product.my_products') }}">全部</a></li>
+    <li class="nav-item"><a class="nav-link {{ 'active' if current_filter == 'DRAFT' }}" href="{{ url_for('product.my_products', status='DRAFT') }}">草稿</a></li>
+    <li class="nav-item"><a class="nav-link {{ 'active' if current_filter == 'PENDING_REVIEW' }}" href="{{ url_for('product.my_products', status='PENDING_REVIEW') }}">待审核</a></li>
+    <li class="nav-item"><a class="nav-link {{ 'active' if current_filter == 'ON_SALE' }}" href="{{ url_for('product.my_products', status='ON_SALE') }}">在售</a></li>
+    <li class="nav-item"><a class="nav-link {{ 'active' if current_filter == 'SOLD' }}" href="{{ url_for('product.my_products', status='SOLD') }}">已售</a></li>
+    <li class="nav-item"><a class="nav-link {{ 'active' if current_filter == 'OFF_SHELF' }}" href="{{ url_for('product.my_products', status='OFF_SHELF') }}">已下架</a></li>
+</ul>
+
+{% if pagination.items %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th width="80">图片</th>
+                <th>商品名称</th>
+                <th>价格</th>
+                <th>状态</th>
+                <th>分类</th>
+                <th>发布时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in pagination.items %}
+            <tr>
+                <td>
+                    {% if p.cover_image %}
+                    <img src="{{ url_for('static', filename=p.cover_image) }}" width="60" height="60" style="object-fit:cover" class="rounded">
+                    {% else %}
+                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width:60px;height:60px"><i class="bi bi-image text-muted"></i></div>
+                    {% endif %}
+                </td>
+                <td><a href="{{ url_for('browse.detail', id=p.product_id) }}">{{ p.product_name }}</a></td>
+                <td>¥{{ '%.2f'|format(p.price) }}</td>
+                <td>
+                    {% set status_map = {'DRAFT':'草稿','PENDING_REVIEW':'审核中','APPROVED':'已通过','REJECTED':'已驳回','ON_SALE':'在售','OFF_SHELF':'已下架','SOLD':'已售'} %}
+                    {% set color_map = {'DRAFT':'secondary','PENDING_REVIEW':'warning','APPROVED':'success','REJECTED':'danger','ON_SALE':'primary','OFF_SHELF':'secondary','SOLD':'info'} %}
+                    <span class="badge bg-{{ color_map.get(p.product_status, 'secondary') }}">{{ status_map.get(p.product_status, p.product_status) }}</span>
+                </td>
+                <td>{{ p.category.category_name if p.category else '-' }}</td>
+                <td>{{ p.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        {% if p.product_status not in ('SOLD',) %}
+                        <a href="{{ url_for('product.edit', id=p.product_id) }}" class="btn btn-outline-secondary">编辑</a>
+                        <form method="post" action="{{ url_for('product.toggle', id=p.product_id) }}" style="display:inline">
+                            <button type="submit" class="btn btn-outline-info">
+                                {% if p.product_status == 'ON_SALE' %}下架{% elif p.product_status == 'DRAFT' %}提交{% elif p.product_status == 'OFF_SHELF' %}上架{% elif p.product_status == 'REJECTED' %}重新提交{% else %}操作{% endif %}
+                            </button>
+                        </form>
+                        <form method="post" action="{{ url_for('product.delete', id=p.product_id) }}" style="display:inline" onsubmit="return confirm('确定要删除该商品吗？')">
+                            <button type="submit" class="btn btn-outline-danger">删除</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% from "partials/_pagination.html" import render_pagination %}
+{{ render_pagination(pagination, 'product.my_products') }}
+{% else %}
+<div class="text-center py-5 text-muted">
+    <i class="bi bi-inbox" style="font-size:3rem"></i>
+    <p class="mt-2">暂无商品，<a href="{{ url_for('product.publish') }}">去发布</a></p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}举报{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header"><h5 class="mb-0">举报{{ '商品' if target_type == 'PRODUCT' else '用户' }}</h5></div>
+            <div class="card-body">
+                {% if target %}
+                <div class="mb-3 p-3 bg-light rounded">
+                    {% if target_type == 'PRODUCT' %}
+                    <p class="mb-0"><strong>举报商品：</strong>{{ target.product_name }}</p>
+                    {% else %}
+                    <p class="mb-0"><strong>举报用户：</strong>{{ target.username }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <form method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.report_reason.label(class="form-label") }}
+                        {{ form.report_reason(class="form-select") }}
+                        {% for err in form.report_reason.errors %}<small class="text-danger">{{ err }}</small>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control", rows="4", maxlength=1000) }}
+                    </div>
+                    {{ form.submit(class="btn btn-danger") }}
+                    <a href="javascript:history.back()" class="btn btn-secondary">取消</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

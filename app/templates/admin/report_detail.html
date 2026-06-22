@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}举报详情{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">管理后台</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.report_list') }}">举报管理</a></li>
+        <li class="breadcrumb-item active">#{{ report.report_id }}</li>
+    </ol>
+</nav>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header"><h6 class="mb-0">举报信息</h6></div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <tr><th width="80">举报人</th><td>{{ report.reporter.username }}</td></tr>
+                    <tr><th>类型</th><td>{{ '商品' if report.target_type == 'PRODUCT' else '用户' }}</td></tr>
+                    <tr><th>原因</th><td>{{ report.report_reason }}</td></tr>
+                    <tr><th>说明</th><td>{{ report.description or '无' }}</td></tr>
+                    <tr><th>状态</th><td><span class="badge bg-{{ 'warning' if report.report_status=='PENDING' else 'secondary' }}">{{ report.status_display }}</span></td></tr>
+                    <tr><th>提交时间</th><td>{{ report.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td></tr>
+                    {% if report.handler %}
+                    <tr><th>处理人</th><td>{{ report.handler.username }}</td></tr>
+                    <tr><th>处理结果</th><td>{{ report.handle_result or '-' }}</td></tr>
+                    <tr><th>处理时间</th><td>{{ report.handled_at.strftime('%Y-%m-%d %H:%M:%S') if report.handled_at else '-' }}</td></tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {% if report.report_status == 'PENDING' %}
+        <div class="card shadow-sm">
+            <div class="card-header"><h6 class="mb-0">处理举报</h6></div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('admin.handle_report', id=report.report_id) }}">
+                    <div class="mb-2">
+                        <label class="form-label">处理方式</label>
+                        <select name="action" class="form-select mb-2" required>
+                            <option value="DISMISSED">驳回举报</option>
+                            {% if report.target_type == 'PRODUCT' %}
+                            <option value="TAKEDOWN">下架商品</option>
+                            {% endif %}
+                            {% if report.target_type == 'USER' %}
+                            <option value="DISABLED">禁用用户</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">处理说明</label>
+                        <textarea name="handle_result" class="form-control" rows="3" maxlength="1000"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100">确认处理</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info">该举报已处理</div>
+        {% endif %}
+
+        {% if target %}
+        <div class="card shadow-sm mt-3">
+            <div class="card-header"><h6 class="mb-0">被举报对象</h6></div>
+            <div class="card-body">
+                {% if report.target_type == 'PRODUCT' %}
+                <p><strong>商品：</strong>{{ target.product_name }}</p>
+                <p><strong>卖家：</strong>{{ target.seller.username }}</p>
+                <a href="{{ url_for('browse.detail', id=target.product_id) }}" target="_blank" class="btn btn-sm btn-outline-primary">查看商品</a>
+                {% else %}
+                <p><strong>用户：</strong>{{ target.username }}</p>
+                <p><strong>状态：</strong>{{ target.status }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

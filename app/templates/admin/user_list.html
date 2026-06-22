@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}用户管理{% endblock %}
+{% block content %}
+<h4 class="mb-3">用户管理</h4>
+<form class="row g-2 mb-3" method="get">
+    <div class="col-md-4"><input type="text" name="q" class="form-control" placeholder="搜索用户名..." value="{{ query or '' }}"></div>
+    <div class="col-md-3">
+        <select name="status" class="form-select">
+            <option value="">全部状态</option>
+            <option value="ACTIVE" {{ 'selected' if status == 'ACTIVE' }}>正常</option>
+            <option value="DISABLED" {{ 'selected' if status == 'DISABLED' }}>已禁用</option>
+        </select>
+    </div>
+    <div class="col-md-2"><button type="submit" class="btn btn-primary w-100">搜索</button></div>
+</form>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr><th>ID</th><th>用户名</th><th>手机号</th><th>角色</th><th>状态</th><th>注册时间</th><th>操作</th></tr>
+        </thead>
+        <tbody>
+            {% for u in pagination.items %}
+            <tr>
+                <td>{{ u.user_id }}</td>
+                <td><a href="{{ url_for('admin.user_detail', id=u.user_id) }}">{{ u.username }}</a></td>
+                <td>{{ mask_phone(u.phone) }}</td>
+                <td><span class="badge bg-{{ 'info' if u.role == 'ADMIN' else 'secondary' }}">{{ '管理员' if u.role == 'ADMIN' else '用户' }}</span></td>
+                <td><span class="badge bg-{{ 'success' if u.status == 'ACTIVE' else 'danger' }}">{{ '正常' if u.status == 'ACTIVE' else '已禁用' }}</span></td>
+                <td><small>{{ u.created_at.strftime('%Y-%m-%d') }}</small></td>
+                <td>
+                    <a href="{{ url_for('admin.user_detail', id=u.user_id) }}" class="btn btn-sm btn-outline-secondary">详情</a>
+                    {% if u.role != 'ADMIN' %}
+                    <form method="post" action="{{ url_for('admin.toggle_user', id=u.user_id) }}" style="display:inline">
+                        <button class="btn btn-sm btn-outline-{{ 'danger' if u.status == 'ACTIVE' else 'success' }}">
+                            {{ '禁用' if u.status == 'ACTIVE' else '启用' }}
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% from "partials/_pagination.html" import render_pagination %}
+{{ render_pagination(pagination, 'admin.user_list') }}
+{% endblock %}

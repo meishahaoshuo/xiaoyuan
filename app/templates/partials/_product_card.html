@@ -1,0 +1,28 @@
+{% macro product_card(product) %}
+<div class="col">
+    <a href="{{ url_for('browse.detail', id=product.product_id) }}" class="text-decoration-none">
+        <div class="product-card">
+            <div class="card-img-wrapper">
+                {% if product.cover_image %}
+                <img src="{{ url_for('static', filename=product.cover_image) }}" alt="{{ product.product_name }}" loading="lazy">
+                {% else %}
+                <div class="img-placeholder">
+                    <i class="bi bi-image" style="font-size:2.5rem"></i>
+                </div>
+                {% endif %}
+                {% if product.condition_level == '全新' %}
+                <span class="position-absolute top-0 end-0 m-2 badge condition-new">全新</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="card-title">{{ product.product_name }}</div>
+                <div class="price"><span class="price-symbol">¥</span>{{ '%.2f'|format(product.price) }}</div>
+                <div class="meta">
+                    <span><i class="bi bi-geo-alt"></i> {{ product.trade_location[:6] }}</span>
+                    <span class="ms-auto"><i class="bi bi-eye"></i> {{ product.view_count or 0 }}</span>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+{% endmacro %}

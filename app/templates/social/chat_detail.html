@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}与 {{ other_user.username }} 聊天{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex align-items-center">
+                <a href="{{ url_for('social.chat_list') }}" class="btn btn-sm btn-outline-secondary me-2"><i class="bi bi-arrow-left"></i></a>
+                <strong>{{ other_user.username }}</strong>
+                <span class="text-muted ms-2 small">| {{ product.product_name }}</span>
+            </div>
+            <div class="card-body" style="height:400px;overflow-y:auto" id="chatMessages">
+                {% if messages %}
+                {% for msg in messages %}
+                <div class="d-flex mb-3 {{ 'justify-content-end' if msg.sender_id == current_user.user_id else '' }}">
+                    <div class="rounded px-3 py-2 {{ 'bg-primary text-white' if msg.sender_id == current_user.user_id else 'bg-light' }}" style="max-width:70%">
+                        <p class="mb-0">{{ msg.message_content }}</p>
+                        <small class="{{ 'text-white-50' if msg.sender_id == current_user.user_id else 'text-muted' }}">{{ msg.created_at.strftime('%H:%M') }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="text-center py-5 text-muted">开始对话吧</div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <form method="post" class="d-flex gap-2">
+                    {{ form.hidden_tag() }}
+                    {{ form.content(class="form-control", rows="2", placeholder="输入消息...", maxlength=2000) }}
+                    {{ form.submit(class="btn btn-primary") }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+// Auto scroll to bottom
+const container = document.getElementById('chatMessages');
+if(container) container.scrollTop = container.scrollHeight;
+</script>
+{% endblock %}

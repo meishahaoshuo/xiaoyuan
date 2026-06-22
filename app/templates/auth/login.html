@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}登录 - 校园二手交易{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5 col-lg-4">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body p-4 p-lg-5">
+                <div class="text-center mb-4">
+                    <span style="font-size:2.5rem">♻</span>
+                    <h4 class="fw-bold mt-2">欢迎回来</h4>
+                    <p class="text-muted small">登录你的校园二手账号</p>
+                </div>
+                <form method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        <label class="form-label">用户名</label>
+                        {{ form.username(class="form-control form-control-lg", placeholder="请输入用户名") }}
+                        {% for err in form.username.errors %}<small class="text-danger">{{ err }}</small>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">密码</label>
+                        {{ form.password(class="form-control form-control-lg", placeholder="请输入密码") }}
+                        {% for err in form.password.errors %}<small class="text-danger">{{ err }}</small>{% endfor %}
+                    </div>
+                    <div class="d-grid mb-3">
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                    </div>
+                </form>
+                <div class="text-center">
+                    <a href="{{ url_for('auth.register') }}" class="fw-medium">还没有账号？立即注册</a><br>
+                    <a href="{{ url_for('auth.forgot_password') }}" class="text-muted small">忘记密码？</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

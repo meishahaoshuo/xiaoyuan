@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}提交订单{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header"><h5 class="mb-0">确认订单</h5></div>
+            <div class="card-body">
+                <div class="card bg-light mb-3">
+                    <div class="card-body">
+                        <div class="d-flex gap-3">
+                            {% if product.cover_image %}
+                            <img src="{{ url_for('static', filename=product.cover_image) }}" width="80" height="80" style="object-fit:cover" class="rounded">
+                            {% endif %}
+                            <div>
+                                <h6>{{ product.product_name }}</h6>
+                                <span class="text-danger fw-bold fs-5">¥{{ '%.2f'|format(product.price) }}</span>
+                                <div class="small text-muted">{{ product.condition_level }} | {{ product.trade_location }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">{{ form.trade_type.label.text }}</label>
+                        {% for subfield in form.trade_type %}
+                        <div class="form-check">
+                            {{ subfield(class="form-check-input") }}
+                            {{ subfield.label(class="form-check-label") }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.buyer_message.label(class="form-label") }}
+                        {{ form.buyer_message(class="form-control", rows="2", maxlength=200, placeholder="选填，如：约定时间地点、议价等") }}
+                        <small class="text-muted"><span id="msgCount">0</span>/200</small>
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-danger btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.getElementById('buyer_message').addEventListener('input', function(){
+    document.getElementById('msgCount').textContent = this.value.length;
+});
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "partials/_product_card.html" import product_card %}
+{% block title %}{{ category.category_name }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('browse.home') }}">首页</a></li>
+        <li class="breadcrumb-item active">{{ category.category_name }}</li>
+    </ol>
+</nav>
+<h4 class="mb-3">{{ category.category_name }}</h4>
+{% if pagination.items %}
+<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+    {% for p in pagination.items %}
+    {{ product_card(p) }}
+    {% endfor %}
+</div>
+{% from "partials/_pagination.html" import render_pagination %}
+{{ render_pagination(pagination, 'browse.category') }}
+{% else %}
+<div class="text-center py-5 text-muted">该分类暂无在售商品</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% from "partials/_product_card.html" import product_card %}
+{% block title %}校园二手交易 - 买卖闲置，物尽其用{% endblock %}
+{% block content %}
+
+<!-- Hero -->
+{% if not current_user.is_authenticated or not current_user.is_admin() %}
+<section class="hero">
+    <div class="row align-items-center">
+        <div class="col-lg-7">
+            <h1>校园二手<span class="highlight">好物</span>，<br>发现你的<span class="highlight">心头好</span></h1>
+            <p class="text-secondary mt-3 mb-4" style="font-size:1.05rem;max-width:440px">
+                专为大学生打造的闲置交易平台，买卖放心，淘你所爱。
+            </p>
+            <form class="hero-search" action="{{ url_for('browse.search') }}" method="get">
+                <input type="text" name="q" class="form-control" placeholder="搜一搜：教材、手机、耳机、自行车…">
+                <button type="submit"><i class="bi bi-search me-1"></i>搜索</button>
+            </form>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="num">{{ get_categories()|length }}</div>
+                    <div class="label">商品分类</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="num">7×24</div>
+                    <div class="label">随时发布</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="num">免费</div>
+                    <div class="label">完全免费</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 d-none d-lg-flex justify-content-center">
+            <div style="font-size:10rem;opacity:0.12">♻</div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if newest_products %}
+<!-- Newest Products -->
+<section class="mb-5">
+    <div class="section-header">
+        <h3><span class="icon-circle" style="background:#E8F5F0;color:#2D9F7A"><i class="bi bi-lightning-charge"></i></span> 最新发布</h3>
+        <a href="{{ url_for('browse.search') }}" class="text-decoration-none small fw-medium">查看全部 <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="product-grid">
+        {% for p in newest_products %}
+        {{ product_card(p) }}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if hot_products %}
+<!-- Hot Products -->
+<section class="mb-5">
+    <div class="section-header">
+        <h3><span class="icon-circle" style="background:#FDE8E8;color:#E74C4C"><i class="bi bi-fire"></i></span> 热门推荐</h3>
+        <span class="text-muted small">近7日浏览量最高</span>
+    </div>
+    <div class="product-grid">
+        {% for p in hot_products %}
+        {{ product_card(p) }}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if not newest_products and not hot_products %}
+<div class="empty-state">
+    <i class="bi bi-shop"></i>
+    <h4>还没有商品</h4>
+    <p class="text-muted">成为第一个发布闲置物品的同学吧！</p>
+    <a href="{{ url_for('product.publish') }}" class="btn btn-primary btn-lg mt-2">
+        <i class="bi bi-plus-circle me-2"></i>发布商品
+    </a>
+</div>
+{% endif %}
+{% endblock %}

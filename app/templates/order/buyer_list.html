@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}我购买的{% endblock %}
+{% block content %}
+<h4 class="mb-3">我购买的</h4>
+<ul class="nav nav-pills mb-3">
+    {% set statuses = [('','全部'),('PENDING','待确认'),('CONFIRMED','已确认'),('PAID','已支付'),('COMPLETED','已完成'),('CANCELLED','已取消'),('REJECTED','已拒绝')] %}
+    {% for val, label in statuses %}
+    <li class="nav-item"><a class="nav-link {{ 'active' if current_filter == val }}" href="{{ url_for('order.buyer_list', status=val or None) }}">{{ label }}</a></li>
+    {% endfor %}
+</ul>
+{% if pagination.items %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr><th>订单编号</th><th>商品</th><th>金额</th><th>交易方式</th><th>状态</th><th>时间</th><th>操作</th></tr>
+        </thead>
+        <tbody>
+            {% for o in pagination.items %}
+            <tr>
+                <td><small>{{ o.order_no }}</small></td>
+                <td>{{ o.product.product_name if o.product else '-' }}</td>
+                <td>¥{{ '%.2f'|format(o.order_amount) }}</td>
+                <td>{{ '线上' if o.trade_type == 'ONLINE' else '线下' }}</td>
+                <td><span class="badge bg-{{ 'warning' if o.order_status=='PENDING' else 'info' if o.order_status=='CONFIRMED' else 'primary' if o.order_status=='PAID' else 'success' if o.order_status=='COMPLETED' else 'secondary' }}">{{ o.status_display }}</span></td>
+                <td><small>{{ o.created_at.strftime('%m-%d %H:%M') }}</small></td>
+                <td><a href="{{ url_for('order.detail', id=o.order_id) }}" class="btn btn-sm btn-outline-primary">查看</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% from "partials/_pagination.html" import render_pagination %}
+{{ render_pagination(pagination, 'order.buyer_list') }}
+{% else %}
+<div class="text-center py-5 text-muted">
+    <i class="bi bi-cart" style="font-size:3rem"></i>
+    <p class="mt-2">暂无购买记录</p>
+</div>
+{% endif %}
+{% endblock %}
