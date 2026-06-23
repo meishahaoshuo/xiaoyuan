@@ -390,3 +390,6 @@ def get_seller_orders(user_id, status_filter=None, keyword=None):
 
 def get_pending_count(user_id):
     return OrderService.get_pending_count(user_id)
+
+def get_available_actions(order, user_id):
+    return OrderService.get_available_actions(order, user_id)
