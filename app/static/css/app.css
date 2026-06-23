@@ -88,11 +88,11 @@ body {
   justify-content: center;
   width: 28px; height: 28px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.25);
-  color: #fff;
+  background: var(--primary-light);
+  color: var(--primary-dark);
   font-weight: 700;
   font-size: 0.8rem;
-  border: 2px solid rgba(255,255,255,0.5);
+  border: 2px solid var(--primary-lighter);
 }
 
 a { color: var(--primary); transition: color var(--transition); }

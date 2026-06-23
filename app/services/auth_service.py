@@ -245,7 +245,7 @@ def send_password_reset_otp(identifier):
     )
 
 
-def register_user(username, password, phone=None, email=None, nickname=None, otp=None):
+def register_user(username, password, phone=None, email=None, nickname=None, otp=None, role='USER'):
     username = normalize_username(username)
     phone = normalize_phone(phone) or None
     email = normalize_email(email) or None
@@ -267,12 +267,16 @@ def register_user(username, password, phone=None, email=None, nickname=None, otp
     if email and User.active().filter_by(email=email).first():
         return False, '邮箱已被其他账号使用。', None
 
+    # 验证角色值合法性
+    allowed_roles = {'USER', 'ADMIN'}
+    safe_role = role if role in allowed_roles else 'USER'
+
     user = User(
         username=username,
         phone=phone,
         email=email,
         nickname=nickname,
-        role='USER',
+        role=safe_role,
         status='ACTIVE'
     )
     user.set_password(password)

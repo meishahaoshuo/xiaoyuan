@@ -53,7 +53,8 @@ def register():
             phone=form.phone.data,
             email=form.email.data,
             nickname=form.nickname.data,
-            otp=form.otp.data
+            otp=form.otp.data,
+            role=form.role.data
         )
         if success:
             flash(message, 'success')

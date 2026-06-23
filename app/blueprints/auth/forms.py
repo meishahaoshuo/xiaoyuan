@@ -1,7 +1,7 @@
 import re
 
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, SubmitField
+from wtforms import PasswordField, SelectField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional, ValidationError
 
 
@@ -40,6 +40,10 @@ class RegisterForm(FlaskForm):
         Optional(),
         Length(max=50, message='昵称长度不能超过 50 个字符')
     ])
+    role = SelectField('账号类型', choices=[
+        ('USER', '普通用户'),
+        ('ADMIN', '管理员'),
+    ], default='USER')
     otp = StringField('验证码', validators=[
         DataRequired('请输入验证码'),
         Length(min=6, max=6, message='验证码为 6 位')

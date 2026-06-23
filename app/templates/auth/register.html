@@ -110,6 +110,18 @@
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label">账号类型</label>
+                    <div class="auth-input-wrap">
+                        <i class="bi bi-person-gear"></i>
+                        {{ form.role(class="form-select form-select-lg", id="role-select") }}
+                    </div>
+                    <div class="form-text">管理员拥有后台管理权限，普通用户可正常买卖闲置物品。</div>
+                    {% for err in form.role.errors %}
+                    <div class="auth-field-error">{{ err }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label">验证码</label>
                     <div class="row g-2 align-items-start">
                         <div class="col-sm-7">
