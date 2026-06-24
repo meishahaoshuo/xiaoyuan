@@ -220,6 +220,19 @@ a:hover {
   box-shadow: 0 0 0 2px rgba(255,255,255,0.9);
 }
 
+.notification-item {
+  border-left: none;
+}
+
+.notification-unread-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: var(--accent-red);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.95);
+}
+
 .navbar .btn-light {
   background: linear-gradient(135deg, var(--primary), #7B78F2);
   border: none;
