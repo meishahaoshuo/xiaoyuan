@@ -32,6 +32,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // --- Mobile navbar: collapse on link click ---
+    document.querySelectorAll('#navbarNav .nav-link, #navbarNav .dropdown-item').forEach(function (link) {
+        link.addEventListener('click', function () {
+            var nav = document.getElementById('navbarNav');
+            if (nav && nav.classList.contains('show')) {
+                setTimeout(function () {
+                    var bsCollapse = bootstrap.Collapse.getInstance(nav);
+                    if (bsCollapse) bsCollapse.hide();
+                }, 150);
+            }
+        });
+    });
+
     // --- Bootstrap tooltips ---
     [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(function (el) {
         return new bootstrap.Tooltip(el);

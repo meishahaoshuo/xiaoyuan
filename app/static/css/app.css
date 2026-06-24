@@ -351,8 +351,12 @@ a:hover {
 }
 
 .navbar .navbar-collapse {
-  display: flex;
   align-items: center;
+}
+@media (min-width: 992px) {
+  .navbar .navbar-collapse {
+    display: flex !important;
+  }
 }
 
 .navbar .navbar-nav {
