@@ -808,6 +808,29 @@ a:hover {
   border-color: var(--primary);
   color: var(--primary);
 }
+/* seller action buttons on detail page */
+.btn-seller {
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 12px;
+  transition: all var(--transition);
+}
+.btn-seller:hover {
+  border-color: var(--primary);
+  background: rgba(88, 86, 214, 0.05);
+  color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(88, 86, 214, 0.15);
+}
+.btn-seller.btn-takedown:hover {
+  border-color: var(--accent-orange);
+  background: rgba(255, 149, 0, 0.06);
+  color: var(--accent-orange);
+  box-shadow: 0 4px 12px rgba(255, 149, 0, 0.15);
+}
 
 .btn-danger {
   background: linear-gradient(135deg, var(--accent-red), #FF6B6B);

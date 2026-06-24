@@ -200,6 +200,8 @@ def admin_takedown_product(product_id, permanent=False):
     product = db.session.get(Product, product_id)
     if not product:
         return False, '商品不存在。'
+    if product.product_status == 'OFF_SHELF' and not permanent:
+        return False, '该商品已是下架状态。'
     if permanent:
         active_order = Order.active().filter(
             Order.product_id == product_id,
@@ -209,11 +211,32 @@ def admin_takedown_product(product_id, permanent=False):
         product.deleted = True
         product.product_status = 'OFF_SHELF'
         db.session.commit()
+        # 通知卖家商品已被永久删除
+        _notify_seller_takedown(product, '您的商品已被管理员永久删除。')
         return True, '商品已永久删除。'
     else:
         product.product_status = 'OFF_SHELF'
         db.session.commit()
+        # 通知卖家商品已被下架
+        _notify_seller_takedown(product, '您的商品已被管理员下架。如有疑问请联系管理员。')
         return True, '商品已下架。'
+
+
+def _notify_seller_takedown(product, msg):
+    """通知卖家商品被管理员下架/删除。"""
+    try:
+        from app.models.notification import Notification
+        notice = Notification(
+            receiver_id=product.seller_id,
+            notification_type='SYSTEM',
+            title='商品管理通知',
+            content=f'您的商品「{product.product_name}」{msg}',
+            related_id=product.product_id,
+        )
+        db.session.add(notice)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
 
 
 def manage_category(action, category_id=None, name=None, description=None):

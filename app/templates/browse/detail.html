@@ -99,8 +99,9 @@
 
                 <!-- Action Buttons - Moved above comments -->
                 <div class="mb-4 detail-action-group">
-                    {% if current_user.is_authenticated and not current_user.is_admin() %}
+                    {% if current_user.is_authenticated %}
                         <div class="d-flex gap-2 flex-wrap">
+                            {% if not current_user.is_admin() %}
                             {% if product.seller_id != current_user.user_id and product.product_status == 'ON_SALE' %}
                             <a href="{{ url_for('order.submit', product_id=product.product_id) }}" class="btn btn-primary btn-detail">
                                 <i class="bi bi-lightning-charge me-1"></i>立即购买
@@ -109,7 +110,7 @@
                                 <i class="bi bi-chat-dots me-1"></i>私聊
                             </a>
                             {% endif %}
-                            {% if product.product_status == 'ON_SALE' %}
+                            {% if product.product_status == 'ON_SALE' and product.seller_id != current_user.user_id %}
                             <button class="btn btn-outline-danger btn-detail btn-fav {{ 'active' if is_favorited }}" data-product-id="{{ product.product_id }}">
                                 <i class="bi {{ 'bi-heart-fill' if is_favorited else 'bi-heart' }} me-1"></i>收藏
                             </button>
@@ -118,6 +119,26 @@
                             <a href="{{ url_for('social.report', type='PRODUCT', id=product.product_id) }}" class="btn btn-outline-secondary btn-detail">
                                 <i class="bi bi-flag me-1"></i>举报
                             </a>
+                            {% endif %}
+                            {% if product.seller_id == current_user.user_id %}
+                            <a href="{{ url_for('product.edit', id=product.product_id) }}" class="btn btn-seller">
+                                <i class="bi bi-pencil me-1"></i>编辑
+                            </a>
+                            {% if product.product_status == 'ON_SALE' %}
+                            <form method="post" action="{{ url_for('product.toggle', id=product.product_id) }}" style="display:inline" onsubmit="return confirm('确定下架该商品？')">
+                                <button class="btn btn-seller btn-takedown">
+                                    <i class="bi bi-box-arrow-down me-1"></i>下架
+                                </button>
+                            </form>
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+                            {% if current_user.is_admin() and product.product_status == 'ON_SALE' %}
+                            <form method="post" action="{{ url_for('admin.takedown_product', id=product.product_id) }}" style="display:inline" onsubmit="return confirm('确定下架该商品？')">
+                                <button class="btn btn-outline-warning btn-detail" name="permanent" value="0">
+                                    <i class="bi bi-shield-exclamation me-1"></i>下架
+                                </button>
+                            </form>
                             {% endif %}
                         </div>
                     {% elif not current_user.is_authenticated %}

@@ -92,6 +92,9 @@
                 <a href="{{ url_for('admin.product_review') }}" class="admin-action-btn" style="--accent:#D97706">
                     <i class="bi bi-box-seam"></i> 待审核商品 <span class="badge rounded-pill bg-warning text-dark ms-auto">{{ stats.pending_products }}</span>
                 </a>
+                <a href="{{ url_for('admin.product_list') }}" class="admin-action-btn" style="--accent:#4F46E5">
+                    <i class="bi bi-grid"></i> 商品管理 <span class="badge rounded-pill bg-primary ms-auto">{{ stats.on_sale_products }}</span>
+                </a>
                 <a href="{{ url_for('admin.report_list') }}" class="admin-action-btn" style="--accent:#DC2626">
                     <i class="bi bi-flag"></i> 待处理举报 <span class="badge rounded-pill bg-danger ms-auto">{{ stats.pending_reports }}</span>
                 </a>
